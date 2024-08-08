@@ -22,6 +22,9 @@ export class CompanyService {
     const limit = listQueryType.limit || 15;
     const offset = listQueryType.offset || 0;
     const name = listQueryType.name;
+    const permalink = listQueryType.permalink;
+    const crunchbase_url = listQueryType.crunchbase_url;
+
 
 
     if (name) {
@@ -31,6 +34,24 @@ export class CompanyService {
         }
     }
 
+    if (permalink) {
+        condition.permalink = {
+            $regex: permalink,
+            $options: 'i',
+        }
+    }
+
+    if (crunchbase_url) {
+        condition.crunchbase_url = {
+            $regex: crunchbase_url,
+            $options: 'i',
+        }
+    }
+
         return this.companyModel.find(condition, {}, {limit: limit, skip: offset}).exec();
+    }
+
+    async companyDetail(id: string): Promise<Company> {
+        return this.companyModel.findById(id).exec();
     }
 }
